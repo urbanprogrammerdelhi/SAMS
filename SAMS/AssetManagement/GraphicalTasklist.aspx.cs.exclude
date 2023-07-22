@@ -1,0 +1,244 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using AjaxControlToolkit;
+using System.Drawing;
+using System.Text;
+using System.Web.UI.HtmlControls;
+using System.Data.SqlClient;
+using System.IO;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using NPOI.HSSF.UserModel;
+
+public partial class AssetManagement_GraphicalTasklist : BasePage
+{
+    public string Date1, Date2, Date3, Date4, Date5, Date6, Date7;
+    public string Pend1, Pend2, Pend3, Pend4, Pend5, Pend6, Pend7;
+    public string Comp1, Comp2, Comp3, Comp4, Comp5, Comp6, Comp7;
+    #region Properties
+    private bool IsReadAccess
+    {
+        get
+        {
+            try
+            {
+                var VirtualDirNameLenght = 0;
+                VirtualDirNameLenght = int.Parse(System.Web.HttpContext.Current.Request.Url.AbsolutePath.IndexOf(@"/", 1).ToString());
+                return IsReadAllowed(System.Web.HttpContext.Current.Request.Url.AbsolutePath.Remove(0, VirtualDirNameLenght));
+            }
+            catch (Exception ex)
+            { throw new Exception("Have not Rights", ex); }
+        }
+    }
+    private bool IsWriteAccess
+    {
+        get
+        {
+            try
+            {
+                var VirtualDirNameLenght = 0;
+                VirtualDirNameLenght = int.Parse(System.Web.HttpContext.Current.Request.Url.AbsolutePath.IndexOf(@"/", 1).ToString());
+                return IsWriteAllowed(System.Web.HttpContext.Current.Request.Url.AbsolutePath.Remove(0, VirtualDirNameLenght));
+            }
+            catch (Exception ex)
+            { throw new Exception("Have not Rights", ex); }
+        }
+    }
+    private bool IsModifyAccess
+    {
+        get
+        {
+            try
+            {
+                var VirtualDirNameLenght = 0;
+                VirtualDirNameLenght = int.Parse(System.Web.HttpContext.Current.Request.Url.AbsolutePath.IndexOf(@"/", 1).ToString());
+                return IsModifyAllowed(System.Web.HttpContext.Current.Request.Url.AbsolutePath.Remove(0, VirtualDirNameLenght));
+            }
+            catch (Exception ex)
+            { throw new Exception("Have not Rights", ex); }
+        }
+    }
+    private bool IsDeleteAccess
+    {
+        get
+        {
+            try
+            {
+                var VirtualDirNameLenght = 0;
+                VirtualDirNameLenght = int.Parse(System.Web.HttpContext.Current.Request.Url.AbsolutePath.IndexOf(@"/", 1).ToString());
+                return IsDeleteAllowed(System.Web.HttpContext.Current.Request.Url.AbsolutePath.Remove(0, VirtualDirNameLenght));
+            }
+            catch (Exception ex)
+            { throw new Exception("Have not Rights", ex); }
+        }
+    }
+    protected bool IsAuthorizationAccess
+    {
+        get
+        {
+            try
+            {
+                var bp = new BasePage();
+                int virtualDirNameLenght = int.Parse(System.Web.HttpContext.Current.Request.Url.AbsolutePath.IndexOf(@"/", 1).ToString());
+                return bp.IsAuthorizationAllowed(System.Web.HttpContext.Current.Request.Url.AbsolutePath.Remove(0, virtualDirNameLenght));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(Resources.Resource.NOAccessRights, ex);
+            }
+        }
+    }
+    #endregion
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            if (IsReadAccess)
+            {
+                txtDate.Text = DateTime.Today.AddDays(-6).ToString("dd-MMM-yyyy");
+                txtToDate.Text = DateTime.Today.ToString("dd-MMM-yyyy");
+                FillddlClientCode();
+                FillddlSiteId(ddlClientCode.SelectedItem.Value);
+                FillddlPostCode(ddlClientCode.SelectedItem.Value, ddlSiteId.SelectedItem.Value);
+            }
+        }
+        txtDate.Attributes.Add("readonly", "readonly");
+        txtToDate.Attributes.Add("readonly", "readonly");
+        FillgvTaskMaster();
+    }
+    private void FillddlClientCode()
+    {
+        var objAssetManagement = new BL.AssetManagement();
+        ddlClientCode.DataSource = objAssetManagement.GetClientCode(BaseLocationAutoID);
+        ddlClientCode.DataTextField = "ClientCodenName";
+        ddlClientCode.DataValueField = "ClientCode";
+        ddlClientCode.DataBind();
+        // ddlClientCode.Items.Insert(0, new ListItem("ALL", "ALL"));
+        if (ddlClientCode.SelectedValue == "")
+        {
+            var li = new ListItem { Text = Resources.Resource.NoData, Value = @"0" };
+            ddlClientCode.Items.Add(li);
+        }
+    }
+    private void FillddlSiteId(string ClientCode)
+    {
+        var objAssetManagement = new BL.AssetManagement();
+        ddlSiteId.DataSource = objAssetManagement.GetAsmtId(ClientCode, BaseLocationAutoID);
+        ddlSiteId.DataTextField = "SiteCodenName";
+        ddlSiteId.DataValueField = "AsmtId";
+        ddlSiteId.DataBind();
+        // ddlSiteId.Items.Insert(0, new ListItem("ALL", "ALL"));
+        if (ddlSiteId.SelectedValue == "")
+        {
+            var li = new ListItem { Text = Resources.Resource.NoData, Value = @"0" };
+            ddlSiteId.Items.Add(li);
+        }
+    }
+    private void FillddlPostCode(string ClientCode, string AsmtId)
+    {
+        var objAssetManagement = new BL.AssetManagement();
+        ddlPostCode.DataSource = objAssetManagement.GetPostCode(ClientCode, AsmtId, BaseLocationAutoID);
+        ddlPostCode.DataTextField = "PostCodenName";
+        ddlPostCode.DataValueField = "PostAutoId";
+        ddlPostCode.DataBind();
+        ddlPostCode.Items.Insert(0, new ListItem("ALL", "ALL"));
+        if (ddlPostCode.SelectedValue == "")
+        {
+            var li = new ListItem { Text = Resources.Resource.NoData, Value = @"0" };
+            ddlPostCode.Items.Add(li);
+        }
+    }
+    private void FillgvTaskMaster()
+    {
+        try
+        {
+            var objAssetMgmt = new BL.AssetManagement();
+            var dsTaskMaster = new DataSet();
+            var dtTaskMaster = new DataTable();
+            dsTaskMaster = objAssetMgmt.GetGraphTasklist(ddlClientCode.SelectedItem.Value, ddlSiteId.SelectedItem.Value, ddlPostCode.SelectedItem.Value, BaseLocationAutoID, txtDate.Text, txtToDate.Text, ddlStatus.SelectedItem.Value);
+            dtTaskMaster = dsTaskMaster.Tables[0];
+            if (dtTaskMaster.Rows.Count > 0)
+            {
+                lblNodata.Visible = false;
+                chart.Visible = true;
+                Date1 = dsTaskMaster.Tables[0].Rows[0]["DutyDate"].ToString();
+                Date2 = dsTaskMaster.Tables[0].Rows[1]["DutyDate"].ToString();
+                Date3 = dsTaskMaster.Tables[0].Rows[2]["DutyDate"].ToString();
+                Date4 = dsTaskMaster.Tables[0].Rows[3]["DutyDate"].ToString();
+                Date5 = dsTaskMaster.Tables[0].Rows[4]["DutyDate"].ToString();
+                //Date6 = dsTaskMaster.Tables[0].Rows[5]["DutyDate"].ToString();
+                //Date7 = dsTaskMaster.Tables[0].Rows[6]["DutyDate"].ToString();
+
+               
+
+
+                Pend1 = dsTaskMaster.Tables[0].Rows[0]["Pending"].ToString();
+                Pend2 = dsTaskMaster.Tables[0].Rows[1]["Pending"].ToString();
+                Pend3 = dsTaskMaster.Tables[0].Rows[2]["Pending"].ToString();
+                Pend4 = dsTaskMaster.Tables[0].Rows[3]["Pending"].ToString();
+                Pend5 = dsTaskMaster.Tables[0].Rows[4]["Pending"].ToString();
+                //Pend6 = dsTaskMaster.Tables[0].Rows[5]["Pending"].ToString();
+                //Pend7 = dsTaskMaster.Tables[0].Rows[6]["Pending"].ToString();
+
+                Comp1 = dsTaskMaster.Tables[0].Rows[0]["Completed"].ToString();
+                Comp2 = dsTaskMaster.Tables[0].Rows[1]["Completed"].ToString();
+                Comp3 = dsTaskMaster.Tables[0].Rows[2]["Completed"].ToString();
+                Comp4 = dsTaskMaster.Tables[0].Rows[3]["Completed"].ToString();
+                Comp5 = dsTaskMaster.Tables[0].Rows[4]["Completed"].ToString();
+                //Comp6 = dsTaskMaster.Tables[0].Rows[5]["Completed"].ToString();
+                //Comp7 = dsTaskMaster.Tables[0].Rows[6]["Completed"].ToString();
+            }
+            else
+            {
+                chart.Visible = false;
+                lblNodata.Visible = true;
+            }
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+    protected void ddlClientCode_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        FillddlSiteId(ddlClientCode.SelectedItem.Value);
+        FillddlPostCode(ddlClientCode.SelectedItem.Value, ddlSiteId.SelectedItem.Value);
+        FillgvTaskMaster();
+    }
+    protected void ddlSiteId_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        FillddlPostCode(ddlClientCode.SelectedItem.Value, ddlSiteId.SelectedItem.Value);
+        FillgvTaskMaster();
+    }
+    protected void ddlPostCode_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        FillgvTaskMaster();
+    }
+    protected void txtDate_TextChanged(object sender, EventArgs e)
+    {
+        DateTime d1 = Convert.ToDateTime(txtDate.Text);
+        d1 = d1.AddDays(+6);
+        txtToDate.Text = d1.ToString("dd-MMM-yyyy");
+        FillgvTaskMaster();
+    }
+    protected void txtToDate_TextChanged(object sender, EventArgs e)
+    {
+        DateTime d1 = Convert.ToDateTime(txtToDate.Text);
+        d1 = d1.AddDays(-6);
+        txtDate.Text = d1.ToString("dd-MMM-yyyy");
+        FillgvTaskMaster();
+    }
+    protected void ddlStatus_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        FillgvTaskMaster();
+    }
+    protected void btnGraph_Click(object sender, EventArgs e)
+    {
+        string TaskStatus = hdnTaskDateStatus.Value;
+        lbl.Text = TaskStatus;
+    }
+}

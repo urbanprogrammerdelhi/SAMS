@@ -1,0 +1,72 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1684
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SAMS", "http://localhost:53686", "{FEBEF2FD-ED86-45BE-9419-F6AC012B7590}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "true"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.1"
+		ProjectReferences = "{3a8bb585-1aaf-4a7f-a6d4-a7fc79eadb8a}|BL.dll;{71342962-5C47-4CB5-9C56-26D004C93245}|DL.dll;{A56F1F51-6828-4C9C-86E7-38E02CC20567}|CommonLibrary.dll;"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_53686"
+		Debug.AspNetCompiler.PhysicalPath = "SAMS\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_53686\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_53686"
+		Release.AspNetCompiler.PhysicalPath = "SAMS\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_53686\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "SAMS\"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BL", "BL\BL.csproj", "{3A8BB585-1AAF-4A7F-A6D4-A7FC79EADB8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLibrary", "CommonLibrary\CommonLibrary.csproj", "{A56F1F51-6828-4C9C-86E7-38E02CC20567}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DL", "DL\DL.csproj", "{71342962-5C47-4CB5-9C56-26D004C93245}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		QA|Any CPU = QA|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FEBEF2FD-ED86-45BE-9419-F6AC012B7590}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEBEF2FD-ED86-45BE-9419-F6AC012B7590}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEBEF2FD-ED86-45BE-9419-F6AC012B7590}.QA|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEBEF2FD-ED86-45BE-9419-F6AC012B7590}.QA|Any CPU.Build.0 = Debug|Any CPU
+		{FEBEF2FD-ED86-45BE-9419-F6AC012B7590}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEBEF2FD-ED86-45BE-9419-F6AC012B7590}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{3A8BB585-1AAF-4A7F-A6D4-A7FC79EADB8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A8BB585-1AAF-4A7F-A6D4-A7FC79EADB8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A8BB585-1AAF-4A7F-A6D4-A7FC79EADB8A}.QA|Any CPU.ActiveCfg = QA|Any CPU
+		{3A8BB585-1AAF-4A7F-A6D4-A7FC79EADB8A}.QA|Any CPU.Build.0 = QA|Any CPU
+		{3A8BB585-1AAF-4A7F-A6D4-A7FC79EADB8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A8BB585-1AAF-4A7F-A6D4-A7FC79EADB8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A56F1F51-6828-4C9C-86E7-38E02CC20567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A56F1F51-6828-4C9C-86E7-38E02CC20567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A56F1F51-6828-4C9C-86E7-38E02CC20567}.QA|Any CPU.ActiveCfg = Release|Any CPU
+		{A56F1F51-6828-4C9C-86E7-38E02CC20567}.QA|Any CPU.Build.0 = Release|Any CPU
+		{A56F1F51-6828-4C9C-86E7-38E02CC20567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A56F1F51-6828-4C9C-86E7-38E02CC20567}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71342962-5C47-4CB5-9C56-26D004C93245}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71342962-5C47-4CB5-9C56-26D004C93245}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71342962-5C47-4CB5-9C56-26D004C93245}.QA|Any CPU.ActiveCfg = Release|Any CPU
+		{71342962-5C47-4CB5-9C56-26D004C93245}.QA|Any CPU.Build.0 = Release|Any CPU
+		{71342962-5C47-4CB5-9C56-26D004C93245}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71342962-5C47-4CB5-9C56-26D004C93245}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1B1F5B94-66B8-4043-ABD7-178C5DB24639}
+	EndGlobalSection
+EndGlobal
